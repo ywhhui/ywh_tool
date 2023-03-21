@@ -2,6 +2,9 @@ package com.szcgc.cougua.utils;
 
 import org.jasypt.util.text.BasicTextEncryptor;
 
+/**
+ * 数据库加解密
+ */
 public class TestDataSource {
     public static void main(String[] args) {
         // 加密

@@ -18,7 +18,7 @@ public class AsposePdfUtil {
     public static void main(String[] args) {
 //        pdf2doc("C:\\Users\\liuya\\Desktop\\pdf\\中信重工铸锻公司数字化工厂技术要求.pdf");
         //  removeWatermark(new File("C:\\Users\\liuya\\Desktop\\pdf\\中信重工铸锻公司数字化工厂技术要求.docx"));
-        pdf2doc("C:\\Users\\18871022312\\Desktop\\111\\余文辉简历.pdf","C:\\Users\\18871022312\\Desktop\\111\\1ywh.docx");
+        pdf2doc("D:\\ziyan\\code\\ywh_tool\\66.pdf","D:\\ziyan\\code\\ywh_tool\\7.docx");
 
 //        pdf2doc("C:\\Users\\18871022312\\Desktop\\222\\余文辉简历_加水印.pdf","C:\\Users\\18871022312\\Desktop\\222\\66.docx");
 //        removeWatermark(new File("C:\\Users\\18871022312\\Desktop\\222\\88888.docx"));
