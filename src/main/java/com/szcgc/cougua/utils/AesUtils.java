@@ -228,6 +228,8 @@ public class AesUtils {
             System.out.println("ecb加密后"+ecbEn);
             String ecbDe = decryptAes(ecbEn, key);
             System.out.println("ecbDe解密后"+ecbDe);
+//            String str22 = decryptAesToString(ecbEn, key);
+//            System.out.println("str22解密后"+str22);
 
             //AES/CBC/PKCS5Padding 填充模式
             String cbcEn = encryptAesToString(str, key);
