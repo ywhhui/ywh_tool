@@ -76,6 +76,57 @@ public class AsposePdfUtil {
         return true;
     }
 
+    //pdf转doc(目前最大支持21页)
+    public static void pdf2doc2(String pdfPath,String wordPath) {
+        long old = System.currentTimeMillis();
+        try {
+            //新建一个pdf文档
+//            String wordPath=pdfPath.substring(0,pdfPath.lastIndexOf("."))+".docx";
+            File file = new File(wordPath);
+            FileOutputStream os = new FileOutputStream(file);
+            //Address是将要被转化的word文档
+            Document doc = new Document(pdfPath);
+            //全面支持DOC, DOCX, OOXML, RTF HTML, OpenDocument, PDF, EPUB, XPS, SWF 相互转换
+            doc.save(os, SaveFormat.DocX);
+            os.close();
+            System.out.println("Pdf 转 Word......");
+            //去除Aspose.PDF创建 水印
+            removeWatermark(new File(wordPath));
+            //转化用时
+            long now = System.currentTimeMillis();
+            System.out.println("Pdf 转 Word 共耗时：" + ((now - old) / 1000.0) + "秒");
+        } catch (Exception e) {
+            System.out.println("Pdf 转 Word 失败...");
+            e.printStackTrace();
+        }
+    }
+
+    //移除文字水印
+    public static boolean removeWatermark2(File file) {
+        try {
+            XWPFDocument doc = new XWPFDocument(new FileInputStream(file));
+            // 段落
+            List<XWPFParagraph> paragraphs = doc.getParagraphs();
+            for (XWPFParagraph paragraph : paragraphs) {
+                String text = paragraph.getText();
+                if ("Evaluation Only. Created with Aspose.PDF. Copyright 2002-2021 Aspose Pty Ltd.".equals(text)) {
+                    List<XWPFRun> runs = paragraph.getRuns();
+                    for (XWPFRun xwpfRun : runs) xwpfRun.setText("", 0);
+                }
+//                if ("编辑试用".equals(text)) {
+//                    List<XWPFRun> runs = paragraph.getRuns();
+//                    for (XWPFRun xwpfRun : runs) xwpfRun.setText("", 0);
+//                }
+            }
+            FileOutputStream outStream = new FileOutputStream(file);
+            doc.write(outStream);
+            outStream.close();
+            System.out.println("doc去除水印......");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
 
 
 

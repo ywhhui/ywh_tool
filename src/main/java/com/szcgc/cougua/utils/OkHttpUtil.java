@@ -1,82 +1,204 @@
 package com.szcgc.cougua.utils;
 
-import com.aspose.pdf.Document;
-import com.aspose.pdf.SaveFormat;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFRun;
+import com.google.common.base.Stopwatch;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import okhttp3.*;
+import org.apache.commons.lang3.StringUtils;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
+/**
+ * 走okhttp的四种方式总结
+ *
+ */
 public class OkHttpUtil {
+
+    private static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+
+    //参数json转换
+    private static MediaType mediaType = MediaType.parse("application/json;charset=utf-8");
+
+    //初始化 6秒超时
+    private  static OkHttpClient okHttpClient = new OkHttpClient.Builder()
+            .connectTimeout(60, TimeUnit.SECONDS)
+            .writeTimeout(60,TimeUnit.SECONDS)
+            .readTimeout(60,TimeUnit.SECONDS)
+            .build();
+
+    //okhttp异步调用 阻塞获取主线程返回结果
+    static class CallBackFutrue extends CompletableFuture<Response> implements Callback{
+
+        @Override
+        public void onFailure(Call call, IOException e) {
+            super.completeExceptionally(e);
+        }
+
+        @Override
+        public void onResponse(Call call, Response response) throws IOException {
+            super.complete(response);
+        }
+    }
+
+    /**
+     * 同步post
+     * @param url
+     * @param param
+     * @return
+     */
+    public static int sendPostJsonMsg(String url,String param){
+        Stopwatch stopwatch = Stopwatch.createStarted();
+        try {
+            //初始化参数 如果有的话
+            RequestBody body = RequestBody.create(mediaType,param);
+            Request.Builder builder = new Request.Builder().url(url).post(body);
+            //初始化请求头
+            builder.addHeader("Content-Type","application/json");
+            //获取请求信息
+            Request request = builder.build();
+            //同步post方式
+            Response response = okHttpClient.newCall(request).execute();
+            stopwatch.stop();
+            String result = response.body().string();
+            System.out.println("同步post返回result"+result+"-耗时"+stopwatch.elapsed(TimeUnit.MILLISECONDS));
+        } catch (Exception e) {
+            stopwatch.stop();
+            System.out.println("报错e"+e+stopwatch.elapsed(TimeUnit.MILLISECONDS));
+            return -1;
+        }
+        return 1;
+    }
+
+    //异步post
+    public static int sendAsyncPostJsonMsg(String url,String param){
+
+        Stopwatch stopwatch = Stopwatch.createStarted();
+        try {
+            //初始化参数 如果有的话
+            RequestBody body = RequestBody.create(mediaType,param);
+            Request.Builder builder = new Request.Builder().url(url).post(body);
+            //初始化请求头
+            builder.addHeader("Content-Type","application/json");
+            //获取请求信息
+            Request request = builder.build();
+            //异步post方式
+            CallBackFutrue callBackFutrue = new CallBackFutrue();
+            okHttpClient.newCall(request).enqueue(callBackFutrue);
+            Response response = callBackFutrue.get();
+            String result = response.body().string();
+            stopwatch.stop();
+            System.out.println("异步post返回result"+result+"-耗时"+stopwatch.elapsed(TimeUnit.MILLISECONDS));
+        } catch (Exception e) {
+            stopwatch.stop();
+            System.out.println("报错e"+e+stopwatch.elapsed(TimeUnit.MILLISECONDS));
+            return -1;
+        }
+        return 1;
+    }
+
+    /**
+     * get获取新的url
+     * @param url
+     * @param param
+     * @return
+     */
+    private static String getNewUrl(String url,String param){
+        Map<String,String> paramMap = new HashMap<>();
+        //先考虑json格式的str  考虑有key=value的格式
+        if(StringUtils.isNotEmpty(param)){
+            //兼容key=val格式的入参
+            if(param.contains("{")){
+                paramMap = gson.fromJson(param,new TypeToken<Map<String,String>>(){}.getType());
+            }else{
+                String[] split = param.split("&");
+                for (int i = 0; i < param.split("&").length; i++) {
+                    paramMap.put(split[i].split("=")[0],split[i].split("=")[1]);
+                }
+            }
+        }
+        System.out.println("paramMap"+paramMap);
+        HttpUrl.Builder builder = HttpUrl.parse(url).newBuilder();
+        if(null != paramMap){
+            for (String key:paramMap.keySet()) {
+                builder.addQueryParameter(key,paramMap.get(key));
+            }
+        }
+        url = builder.build().toString();
+        return url;
+    }
+
+    //同步get
+    public static int sendGetJsonMsg(String url,String param){
+        Stopwatch stopwatch = Stopwatch.createStarted();
+        try {
+            url = getNewUrl(url,param);
+            //初始化参数 如果有的话
+//            RequestBody body = RequestBody.create(mediaType,param);
+            Request.Builder builder = new Request.Builder().url(url).get();
+            //初始化请求头
+//            builder.addHeader("Content-Type","application/json");
+            //获取请求信息
+            Request request = builder.build();
+            //同步get方式
+            Response response =okHttpClient.newCall(request).execute();
+            String result = response.body().string();
+            stopwatch.stop();
+            System.out.println("同步get返回result"+result+"-耗时"+stopwatch.elapsed(TimeUnit.MILLISECONDS));
+        } catch (Exception e) {
+            stopwatch.stop();
+            System.out.println("报错e"+e+stopwatch.elapsed(TimeUnit.MILLISECONDS));
+            return -1;
+        }
+        return 1;
+    }
+
+    //异步get
+    public static int sendAsyncGetJsonMsg(String url,String param){
+        Stopwatch stopwatch = Stopwatch.createStarted();
+        try {
+            url = getNewUrl(url,param);
+            //初始化参数 如果有的话
+            Request.Builder builder = new Request.Builder().url(url).get();
+            //初始化请求头
+            //获取请求信息
+            Request request = builder.build();
+            //异步get方式
+            CallBackFutrue callBackFutrue = new CallBackFutrue();
+            okHttpClient.newCall(request).enqueue(callBackFutrue);
+            Response response = callBackFutrue.get();
+            String result = response.body().string();
+            stopwatch.stop();
+            System.out.println("异步get返回result"+result+"-耗时"+stopwatch.elapsed(TimeUnit.MILLISECONDS));
+        } catch (Exception e) {
+            stopwatch.stop();
+            System.out.println("报错e"+e+stopwatch.elapsed(TimeUnit.MILLISECONDS));
+            return -1;
+        }
+        return 1;
+    }
 
 
     public static void main(String[] args) {
-//        pdf2doc("C:\\Users\\liuya\\Desktop\\pdf\\中信重工铸锻公司数字化工厂技术要求.pdf");
-        //  removeWatermark(new File("C:\\Users\\liuya\\Desktop\\pdf\\中信重工铸锻公司数字化工厂技术要求.docx"));
-        pdf2doc("C:\\Users\\18871022312\\Desktop\\111\\余文辉简历.pdf","C:\\Users\\18871022312\\Desktop\\111\\1ywh.docx");
+        //url必须带http 不然报错
+        String url = "127.0.0.1:9003/caffeine/query";
+        url = "http://127.0.0.1:9003/caffeine/query";
+        String param = "{\"accout\":1}";
+//        param="accout=1";
+        //同步get
+        sendGetJsonMsg(url,param);
+        //异步get
+//        sendAsyncGetJsonMsg(url,param);
+        url = "http://127.0.0.1:9003/caffeine/getList";
+        param = "{\"id\":1}";
+        //同步post
+//        sendPostJsonMsg(url,param);
+//        //异步post
+//        sendAsyncPostJsonMsg(url,param);
 
-//        pdf2doc("C:\\Users\\18871022312\\Desktop\\222\\余文辉简历_加水印.pdf","C:\\Users\\18871022312\\Desktop\\222\\66.docx");
-//        removeWatermark(new File("C:\\Users\\18871022312\\Desktop\\222\\88888.docx"));
     }
-
-    //pdf转doc(目前最大支持21页)
-    public static void pdf2doc(String pdfPath,String wordPath) {
-        long old = System.currentTimeMillis();
-        try {
-            //新建一个pdf文档
-//            String wordPath=pdfPath.substring(0,pdfPath.lastIndexOf("."))+".docx";
-            File file = new File(wordPath);
-            FileOutputStream os = new FileOutputStream(file);
-            //Address是将要被转化的word文档
-            Document doc = new Document(pdfPath);
-            //全面支持DOC, DOCX, OOXML, RTF HTML, OpenDocument, PDF, EPUB, XPS, SWF 相互转换
-            doc.save(os, SaveFormat.DocX);
-            os.close();
-            System.out.println("Pdf 转 Word......");
-            //去除Aspose.PDF创建 水印
-            removeWatermark(new File(wordPath));
-            //转化用时
-            long now = System.currentTimeMillis();
-            System.out.println("Pdf 转 Word 共耗时：" + ((now - old) / 1000.0) + "秒");
-        } catch (Exception e) {
-            System.out.println("Pdf 转 Word 失败...");
-            e.printStackTrace();
-        }
-    }
-
-    //移除文字水印
-    public static boolean removeWatermark(File file) {
-        try {
-            XWPFDocument doc = new XWPFDocument(new FileInputStream(file));
-            // 段落
-            List<XWPFParagraph> paragraphs = doc.getParagraphs();
-            for (XWPFParagraph paragraph : paragraphs) {
-                String text = paragraph.getText();
-                if ("Evaluation Only. Created with Aspose.PDF. Copyright 2002-2021 Aspose Pty Ltd.".equals(text)) {
-                    List<XWPFRun> runs = paragraph.getRuns();
-                    for (XWPFRun xwpfRun : runs) xwpfRun.setText("", 0);
-                }
-//                if ("编辑试用".equals(text)) {
-//                    List<XWPFRun> runs = paragraph.getRuns();
-//                    for (XWPFRun xwpfRun : runs) xwpfRun.setText("", 0);
-//                }
-            }
-            FileOutputStream outStream = new FileOutputStream(file);
-            doc.write(outStream);
-            outStream.close();
-            System.out.println("doc去除水印......");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return true;
-    }
-
-
-
-
 }
