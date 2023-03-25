@@ -1,8 +1,6 @@
 package com.szcgc.cougua.utils;
 
 import com.google.common.base.Stopwatch;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import okhttp3.*;
 import org.apache.commons.lang3.StringUtils;
@@ -18,8 +16,6 @@ import java.util.concurrent.TimeUnit;
  *
  */
 public class OkHttpUtil {
-
-    private static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 
     //参数json转换
     private static MediaType mediaType = MediaType.parse("application/json;charset=utf-8");
@@ -113,7 +109,7 @@ public class OkHttpUtil {
         if(StringUtils.isNotEmpty(param)){
             //兼容key=val格式的入参
             if(param.contains("{")){
-                paramMap = gson.fromJson(param,new TypeToken<Map<String,String>>(){}.getType());
+                paramMap = GsonUtils.gson.fromJson(param,new TypeToken<Map<String,String>>(){}.getType());
             }else{
                 String[] split = param.split("&");
                 for (int i = 0; i < param.split("&").length; i++) {
