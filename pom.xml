@@ -21,25 +21,11 @@
     </parent>
     <dependencies>
 
-        <!--<dependency>-->
-            <!--<groupId>junit</groupId>-->
-            <!--<artifactId>junit</artifactId>-->
-            <!--<version>4.12</version>-->
-        <!--</dependency>-->
-
-        <!--&lt;!&ndash; 添加本地jar &ndash;&gt;-->
-        <!--<dependency>-->
-            <!--<groupId>io.github.openfeign.form</groupId>-->
-            <!--<artifactId>feign-form</artifactId>-->
-            <!--<version>3.8.0</version>-->
-        <!--</dependency>-->
-
         <dependency>
             <groupId>com.aspose</groupId>
             <artifactId>aspose-pdf</artifactId>
             <version>21.8</version>
         </dependency>
-
 
         <dependency>
             <groupId>com.itextpdf</groupId>
@@ -74,34 +60,11 @@
             <version>1.0.6</version>
         </dependency>
 
-        <!--<dependency>-->
-            <!--<groupId>org.apache.poi</groupId>-->
-            <!--<artifactId>poi</artifactId>-->
-            <!--<version>3.16</version>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>org.apache.poi</groupId>-->
-            <!--<artifactId>poi-ooxml</artifactId>-->
-            <!--<version>3.16</version>-->
-        <!--</dependency>-->
-
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
             <version>4.1.2</version>
         </dependency>
-
-        <!--<dependency>-->
-            <!--<groupId>org.apache.poi</groupId>-->
-            <!--<artifactId>poi</artifactId>-->
-            <!--<version>4.1.2</version>-->
-            <!--<exclusions>-->
-                <!--<exclusion>-->
-                    <!--<groupId>org.apache.xmlbeans</groupId>-->
-                    <!--<artifactId>xmlbeans</artifactId>-->
-                <!--</exclusion>-->
-            <!--</exclusions>-->
-        <!--</dependency>-->
 
         <dependency>
             <groupId>org.apache.xmlbeans</groupId>
@@ -134,14 +97,6 @@
             <artifactId>lombok</artifactId>
             <version>1.18.18</version>
         </dependency>
-
-        <!--<dependency>-->
-            <!--<groupId>com.alibaba</groupId>-->
-            <!--<artifactId>fastjson</artifactId>-->
-            <!--<version>1.2.83</version>-->
-        <!--</dependency>-->
-
-
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -181,6 +136,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-quartz</artifactId>
+        </dependency>
+        <!--xxl-job- 分布式定时任务-->
+        <dependency>
+            <groupId>com.xuxueli</groupId>
+            <artifactId>xxl-job-core</artifactId>
+            <version>2.4.1-SNAPSHOT</version>
         </dependency>
 
     </dependencies>

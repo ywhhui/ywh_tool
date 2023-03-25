@@ -1,6 +1,9 @@
 package com.szcgc.cougua.utils;
 
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.stereotype.Component;
 
 import java.util.Timer;
@@ -84,5 +87,19 @@ public class ScheduledTasksUtils {
         System.out.println("doSomething4 springTaskTest");
     }
 
-//    static class QuartzTestJob extends QuartzJob
+    /**
+     * 五。quartz
+     * 优点：默认是多线程异步执行，单个任务时，在上一个调度未完成时，下一个调度时间到时，会另起一个线程开始新的调度，多个任务之间互不影响。支持复杂的 cron 表达式，它能被集群实例化，支持分布式部署。
+     缺点：相对于spring task实现定时任务成本更高，需要手动配置 QuartzJobBean 、 JobDetail和 Trigger 等。需要引入了第三方的 quartz 包，有一定的学习成本。不支持并行调度，不支持失败处理策略和动态分片的策略等。
+
+     */
+    public static class QuartzTestJob extends QuartzJobBean{
+        @Override
+        protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
+            String  userName = context.getJobDetail().getJobDataMap().get("userName").toString();
+            System.out.println("doSomething5 quartzTest----"+userName);
+        }
+    }
+
+
 }
