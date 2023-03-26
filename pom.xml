@@ -126,12 +126,12 @@
             <artifactId>gson</artifactId>
             <version>2.8.9</version>
         </dependency>
-        <!--用于耗时日志分析 Stopwatch-->
-        <dependency>
+        <!--用于耗时日志分析 和其他包冲突了 Stopwatch-->
+       <!-- <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>29.0-android</version>
-        </dependency>
+        </dependency>-->
         <!--quartz定时任务-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -143,6 +143,26 @@
             <artifactId>xxl-job-core</artifactId>
             <version>2.4.1-SNAPSHOT</version>
         </dependency>
+        <!--elastic-job- 分布式定时任务-->
+        <dependency>
+            <groupId>com.dangdang</groupId>
+            <artifactId>elastic-job-lite-core</artifactId>
+            <version>2.1.5</version>
+        </dependency>
+        <dependency>
+            <groupId>com.dangdang</groupId>
+            <artifactId>elastic-job-lite-spring</artifactId>
+            <version>2.1.5</version>
+        </dependency>
+        <!--jpa 数据源-->
+      <!--  <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+        </dependency>-->
 
     </dependencies>
 

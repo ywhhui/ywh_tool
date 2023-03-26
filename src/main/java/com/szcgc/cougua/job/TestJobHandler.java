@@ -5,9 +5,9 @@ import com.xxl.job.core.handler.annotation.JobHandler;
 import org.springframework.stereotype.Component;
 
 /**
- *JobHandler 被XxlJob替代
+ *JobHandler 被XxlJob替代 有问题的写法 未实现
  */
-@JobHandler("JobHandlerZj")
+@JobHandler("jobHandlerZj")
 @Component
 public class TestJobHandler extends IJobHandler{
     @Override
