@@ -6,10 +6,9 @@ import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 
-//是否开启xxl-job定时任务，注释掉 //@Configuration 则不开启定时任务
-@Configuration
+//是否开启xxl-job定时任务，注释掉 //@Configuration 则不开启定时任务  需要提前启动xxl job admin管理界面服务
+//@Configuration
 @Data
 //指定任务Handler所在包路径
 @ComponentScan(basePackages = "com.szcgc.cougua.job")

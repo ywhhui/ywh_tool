@@ -9,7 +9,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 public class Application {
     public static void main(String[] args) {
-        //jdk定时任务
+        //jdk定时任务 注意单例的分布式锁
         ScheduledTasksUtils.JdkThreadSleep();
         ScheduledTasksUtils.timerTest();
         ScheduledTasksUtils.scheduledExecutorServiceTest();
