@@ -182,6 +182,20 @@ public class MacUtils {
 
         String computerId = getComputerID();
         System.out.println("computerId："+computerId);
+        System.out.println("getMacAddress2"+getMacAddress2());
 
+    }
+
+    public static String getMacAddress2()throws Exception{
+
+        InetAddress ipAddress = InetAddress.getLocalHost();
+        NetworkInterface networkInterface = NetworkInterface.getByInetAddress(ipAddress);
+        byte[] macAddressBytes = networkInterface.getHardwareAddress();
+        StringBuilder builder = new StringBuilder();
+        for (byte b:macAddressBytes) {
+            builder.append(String.format("%02X:",b));
+        }
+        String macAddress = builder.substring(0,builder.length()-1);
+        return macAddress;
     }
 }
