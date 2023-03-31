@@ -14,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * 定时任务总结
+ * linux crontab -l查 crontab -e建
  *
  */
 @Component
