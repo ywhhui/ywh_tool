@@ -3,6 +3,8 @@ package com.szcgc.cougua.controller;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.szcgc.cougua.utils.GsonUtils;
+import com.szcgc.cougua.utils.PassWordUtil;
+import com.szcgc.cougua.utils.UnZip7ZRarUtils;
 import com.szcgc.cougua.vo.ResultVo;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -10,14 +12,19 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.OutputStream;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 
 @RestController
 @RequestMapping("test")
@@ -124,6 +131,56 @@ public class TestController {
      */
     @PostMapping("/getServiceTime")
     public ResultVo getServiceTime(){
+        ResultVo resultVo = new ResultVo();
+        resultVo.setData(new Date().getTime());
+        resultVo.setSuccess(true);
+        resultVo.setMessage(""+System.currentTimeMillis());
+        return resultVo;
+    }
+
+    private static final Logger logger = LoggerFactory.getLogger(TestController.class);
+    @Resource(name = "testTaskExecutor2")
+    private Executor executor;
+    /**
+     * 破解密码
+     * @return
+     */
+    @PostMapping("/pjmm")
+    public ResultVo pjmm(){
+//        String source = "D:\\ziyan\\code\\ywh_tool\\zip\\sdk技改上线.rar";
+        String source = "D:\\ziyan\\code\\ywh_tool\\zip\\1\\述职报告PPT模板【41套】.rar";
+        String dest = "D:\\ziyan\\code\\ywh_tool\\zip\\test\\";
+//        List<String> numberStr = PassWordUtil.getNumberStr(7);
+//        List<String> numberStr = PassWordUtil.getNoA(4);
+        List<String> numberStr = PassWordUtil.getAlphabetStr(5);
+        logger.info("总归密码数:{}",numberStr.size());
+        for (int i = 0; i < 8; i++) {
+            int subNo = numberStr.size() / 8;
+            List<String> numberStrThread = numberStr.subList(subNo*i,subNo*(i+1));
+            //异步执行1
+            CompletableFuture.runAsync(()->{
+//                System.out.println("密码数："+numberStrThread.size());
+                String errorPwd = "";
+                try {
+                    logger.info("密码数:{}",numberStrThread.size());
+                    for (String passwordStr:numberStrThread) {
+                        boolean unRarResult = UnZip7ZRarUtils.unRar(source, dest, passwordStr);
+                        errorPwd =passwordStr;
+                        if(unRarResult){
+                            System.out.println("解密成功后退出线程："+unRarResult+"-"+passwordStr);
+                            logger.info("解密成功后退出线程 密码是 passwordStr:{}",passwordStr);
+                            break;
+                        }
+                    }
+                    logger.info("跑完的密码数:{}",numberStrThread.size());
+                } catch (Exception e) {
+                    logger.info("报错密码是e:{},errorPwd:{}",e,errorPwd);
+                }
+            },executor).exceptionally(e->{
+                System.out.println("异步执行失败"+e);
+                return null;
+            });
+        }
         ResultVo resultVo = new ResultVo();
         resultVo.setData(new Date().getTime());
         resultVo.setSuccess(true);

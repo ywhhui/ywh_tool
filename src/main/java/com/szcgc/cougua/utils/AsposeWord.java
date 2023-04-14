@@ -77,7 +77,7 @@ public class AsposeWord {
 
     public static void main(String[] args) {
 
-        doc2PDF("D:\\ziyan\\code\\ywh_tool\\6.docx","D:\\ziyan\\code\\ywh_tool\\66.pdf");
+        doc2PDF("D:\\ziyan\\code\\ywh_tool\\10.docx","D:\\ziyan\\code\\ywh_tool\\10yyy.pdf");
 //        doc2PDF("C:\\Users\\18871022312\\Desktop\\111\\余文辉简历.pdf","C:\\Users\\18871022312\\Desktop\\111\\6666666666.docx");
 
 //        pdf2Word("C:\\Users\\18871022312\\Desktop\\大数据\\企业洞察接口文档v20210816.pdf","C:\\Users\\18871022312\\Desktop\\大数据\\企业洞察接口文档v20210816.doc");
