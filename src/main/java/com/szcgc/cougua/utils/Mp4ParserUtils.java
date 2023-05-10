@@ -31,22 +31,19 @@ public class Mp4ParserUtils {
 //        double endTime = 120;//剪切结束时间 秒
 //        clipMp4Video(filePath,workingPath,outName,startTime,endTime);
         //多个合并一个
-//        List<String> filePaths = new ArrayList<>(4);
-//        filePaths.add("D:\\tools\\douyinVideo\\ywh\\1\\1.mp4");
-//        filePaths.add("D:\\tools\\douyinVideo\\ywh\\1\\2.mp4");
-//        filePaths.add("D:\\tools\\douyinVideo\\ywh\\1\\3.mp4");
-//        filePaths.add("D:\\tools\\douyinVideo\\ywh\\1\\4.mp4");
-//        filePaths.add("D:\\tools\\douyinVideo\\ywh\\1\\5.mp4");
-//        filePaths.add("D:\\tools\\douyinVideo\\ywh\\1\\6.mp4");
-//        filePaths.add("D:\\tools\\douyinVideo\\ywh\\1\\7.mp4");
-//        filePaths.add("D:\\tools\\douyinVideo\\ywh\\4.mp4");
-//        filePaths.add("D:\\tools\\douyinVideo\\ywh\\1\\90.mp4");
-//        filePaths.add("D:\\tools\\douyinVideo\\ywh\\1\\113.mp4");
-//        filePaths.add("D:\\tools\\douyinVideo\\ywh\\1\\102.mp4");
-//        mergeVideoNew(filePaths, new File("D:\\tools\\douyinVideo\\ywh\\1\\222.mp4"));
+        List<String> filePaths = new ArrayList<>(8);
+        filePaths.add("D:\\tools\\douyinVideo\\ywh\\20230506\\1.mp4");
+        filePaths.add("D:\\tools\\douyinVideo\\ywh\\20230506\\2.mp4");
+        filePaths.add("D:\\tools\\douyinVideo\\ywh\\20230506\\3.mp4");
+        filePaths.add("D:\\tools\\douyinVideo\\ywh\\20230506\\4.mp4");
+        filePaths.add("D:\\tools\\douyinVideo\\ywh\\20230506\\5.mp4");
+        filePaths.add("D:\\tools\\douyinVideo\\ywh\\20230506\\6.mp4");
+        filePaths.add("D:\\tools\\douyinVideo\\ywh\\20230506\\7.mp4");
+        filePaths.add("D:\\tools\\douyinVideo\\ywh\\20230506\\8.mp4");
+        mergeVideoNew(filePaths, new File("D:\\tools\\douyinVideo\\ywh\\20230506\\222.mp4"));
 
         //给视频加字幕
-        addSubtitles("D:\\tools\\douyinVideo\\ywh\\1\\1.mp4","D:\\tools\\douyinVideo\\ywh\\1\\11.mp4");
+//        addSubtitles("D:\\tools\\douyinVideo\\ywh\\1\\1.mp4","D:\\tools\\douyinVideo\\ywh\\1\\111.mp4");
     }
 
     //注意合并文件的位置顺序 保证需要合并的视频文件是相同高度的视频文件
@@ -116,9 +113,9 @@ public class Mp4ParserUtils {
         try {
             Movie videoMovie = MovieCreator.build(mp4Path);
             TextTrackImpl subTitleEng = new TextTrackImpl();// 实例化文本通道对象
-            subTitleEng.getTrackMetaData().setLanguage("eng");// 设置元数据(语言)
-            subTitleEng.getSubs().add(new TextTrackImpl.Line(0, 1000, "wwwwwwwwwwwwwwwwwwwwwwwwwww"));// 参数时间毫秒值
-            subTitleEng.getSubs().add(new TextTrackImpl.Line(1000, 2000, "111111111111111111111111111111"));
+//            subTitleEng.getTrackMetaData().setLanguage("utf-8");// 设置元数据(语言)
+            subTitleEng.getSubs().add(new TextTrackImpl.Line(0, 1000, "wwwwwwwwwwwwwwwwwwwwwwwwwww我的老家"));// 参数时间毫秒值
+            subTitleEng.getSubs().add(new TextTrackImpl.Line(1000, 2000, "111111111111111111111111111111就住在"));
             subTitleEng.getSubs().add(new TextTrackImpl.Line(2000, 3000, "22222222222222222222222222"));
             subTitleEng.getSubs().add(new TextTrackImpl.Line(3000, 4000, "3333333333333333333333333"));
             subTitleEng.getSubs().add(new TextTrackImpl.Line(4000, 5000, "4444444444444444444444444"));
